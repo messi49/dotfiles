@@ -65,9 +65,9 @@ endfunction
 
 if has('syntax')
 	augroup ZenkakuSpace
-		autocmd!
-		autocmd ColorScheme * call ZenkakuSpace()
-		autocmd VimEnter,WinEnter,BufRead * let w:m1=matchadd('ZenkakuSpace', '　')
+	autocmd!
+	autocmd ColorScheme * call ZenkakuSpace()
+	autocmd VimEnter,WinEnter,BufRead * let w:m1=matchadd('ZenkakuSpace', '　')
 	augroup END
 	call ZenkakuSpace()
 endif
@@ -89,8 +89,7 @@ endif
 let s:slhlcmd = ''
 function! s:StatusLine(mode)
 	if a:mode == 'Enter'
-		silent! let s:slhlcmd = 'highlight ' .
-		s:GetHighlight('StatusLine')
+		silent! let s:slhlcmd = 'highlight ' . s:GetHighlight('StatusLine')
 		silent exec g:hi_insert
 	else
 		highlight clear StatusLine
@@ -102,10 +101,8 @@ function! s:GetHighlight(hi)
 	redir => hl
 	exec 'highlight '.a:hi
 	redir END
-	let hl = substitute(hl,
-	'[\r\n]', '', 'g')
-	let hl = substitute(hl,
-	'xxx', '', '')
+	let hl = substitute(hl, '[\r\n]', '', 'g')
+	let hl = substitute(hl, 'xxx', '', '')
 	return hl
 endfunction
 """"""""""""""""""""""""""""""
@@ -155,7 +152,10 @@ syntax on
 colorscheme desert
 " 行番号の色
 highlight LineNr ctermfg=darkyellow
-
+" エディタウィンドウの末尾から2行目にステータスラインを常時表示させる
+set laststatus=2
+" ステータス行に表示させる情報の指定(どこからかコピペしたので細かい意味はわかっていない)
+set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
 " -----Plugin----- "
 call neobundle#end()
