@@ -157,6 +157,16 @@ set laststatus=2
 " ステータス行に表示させる情報の指定(どこからかコピペしたので細かい意味はわかっていない)
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
+" golang "
+filetype off
+filetype plugin indent off
+set rtp+=$GOROOT/misc/vim
+filetype plugin indent on
+syntax on
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
+exe "set rtp+=".globpath($GOPATH, "src/github.com/nsf/gocode/vim")
+set completeopt=menu,preview
+
 " -----Plugin----- "
 call neobundle#end()
 
