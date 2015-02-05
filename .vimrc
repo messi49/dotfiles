@@ -10,6 +10,8 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 " neobundle自体をneobundleで管理
 NeoBundleFetch 'Shougo/neobundle.vim'
 
+set backspace=indent,eol,start
+
 " -----Plugin----- "
 
 " ファイルオープンを便利に
@@ -34,6 +36,49 @@ noremap :uff :<C-u>UniteWithBufferDir file -buffer-name=file<CR>
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 """"""""""""""""""""""""""""""
+
+"""""""""" vim-quickrun""""""""""""
+NeoBundleLazy 'thinca/vim-quickrun',      {'autoload': {'filetypes': ['ruby', 'python', 'perl', 'sh', 'go', 'cpp', 'c']}}
+nmap <Leader>r <plug>(quickrun)
+let g:quickrun_config = {}
+let g:quickrun_config.perl = {'command': 'perl', 'cmdopt': '-MProject::Libs'}
+let g:quickrun_config['ruby.rspec'] = {'command' : 'rspec'}
+let g:quickrun_config.go = {
+			\ 'command': 'go',
+			\ 'exec': '%c run %s:p:t %a',
+			\ 'tempfile': '%{tempname()}.go',
+			\ 'hook/output_encode/encoding': 'utf-8',
+			\ 'hook/cd/directory': '%S:p:h'}
+
+"""""""""" vim-gocode""""""""""
+NeoBundleLazy 'Blackrush/vim-gocode', {'autoload': {'filetypes': ['go']}}
+
+"""""""""" gocode""""""""""""
+if $GOROOT != ''
+	set rtp+=$GOROOT/misc/vim
+endif
+exe "set rtp+=" . globpath($GOPATH,"src/github.com/golang/lint/misc/vim")
+set completeopt=menu,preview
+
+let g:vim_bootstrap_langs = "go"
+NeoBundle "majutsushi/tagbar"
+NeoBundle "fatih/vim-go"
+
+nmap <silent> <F4> :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+
+let g:tagbar_type_go = {
+			\ 'ctagstype' : 'go',
+			\ 'kinds'     : [  'p:package', 'i:imports:1', 'c:constants', 'v:variables',
+			\ 't:types',  'n:interfaces', 'w:fields', 'e:embedded', 'm:methods',
+			\ 'r:constructor', 'f:functions' ],
+			\ 'sro' : '.',
+			\ 'kind2scope' : { 't' : 'ctype', 'n' : 'ntype' },
+			\ 'scope2kind' : { 'ctype' : 't', 'ntype' : 'n' },
+			\ 'ctagsbin'  : 'gotags',
+			\ 'ctagsargs' : '-sort -silent'
+			\ }
+
 
 " ファイルをtree表示してくれる
 NeoBundle 'scrooloose/nerdtree'
@@ -157,15 +202,6 @@ set laststatus=2
 " ステータス行に表示させる情報の指定(どこからかコピペしたので細かい意味はわかっていない)
 set statusline=%<%f\ %m%r%h%w%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%l,%c%V%8P
 
-" golang "
-filetype off
-filetype plugin indent off
-set rtp+=$GOROOT/misc/vim
-filetype plugin indent on
-syntax on
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
-exe "set rtp+=".globpath($GOPATH, "src/github.com/nsf/gocode/vim")
-set completeopt=menu,preview
 
 " -----Plugin----- "
 call neobundle#end()
